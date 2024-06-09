@@ -4,3 +4,15 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+file-format = "0.25.0"
+jpeg-encoder = "0.6.0"
+palette = "0.7.6"
+png = "0.17.13"
+resize = "0.8.4"
+serde = { version = "1.0.203", features = ["derive"] }
+svg = "0.17.0"
+swash = "0.1.16"
+toml = "0.8.14"
+ziyy = "0.1.1"
+zune-jpeg = "0.4.11"
+zune-png = "0.4.10"

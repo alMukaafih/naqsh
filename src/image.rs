@@ -1,9 +1,39 @@
 #![allow(dead_code)]
 
 use std::mem::ManuallyDrop;
+use std::ops::{AddAssign, Index, IndexMut};
+
 /// A Pixel in an Image.
 pub struct Pixel {
     buf: ManuallyDrop<Vec<u8>>
+}
+
+impl Index<usize> for Pixel {
+    type Output = u8;
+
+    fn index(&self, idx: usize) -> &Self::Output {
+        &self.buf[idx]
+    }
+}
+
+impl IndexMut<usize> for Pixel {
+    fn index_mut(&mut self, idx: usize) -> &mut Self::Output {
+        &mut self.buf[idx]
+    }
+}
+
+impl AddAssign for Pixel {
+    fn add_assign(&mut self, pixel: Self) {
+        let alpha = pixel[3] as u64;
+        /* red */
+        self[0] = ((alpha * pixel[0] as u64) + ((255 - alpha) * self[0] as u64)).div_ceil(255) as u8;
+        /* green */
+        self[1] = ((alpha * pixel[1] as u64) + ((255 - alpha) * self[1] as u64)).div_ceil(255) as u8;
+        /* blue */
+        self[2] = ((alpha * pixel[2] as u64) + ((255 - alpha) * self[2] as u64)).div_ceil(255) as u8;
+        /* alpha */
+        self[3] = (alpha * 255 + ((255 - alpha) * self[3] as u64)).div_ceil(255) as u8;
+    }
 }
 
 pub struct Row {
