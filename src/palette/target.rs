@@ -1,3 +1,4 @@
+/// Kind of target to Build.
 pub enum TargetKind {
     /// A target which has the characteristics of a vibrant color which is light in luminance.
     LightVibrant,
@@ -13,6 +14,11 @@ pub enum TargetKind {
     DarkMuted
 }
 
+/// A struct which allows custom selection of colors in a [Palette](super::Palette)'s generation. Instances
+/// can be created via the [Builder] class.
+///
+/// To use the target, use the [add_target](super::Builder::add_target) API when building a
+/// Palette.
 pub struct Target {
     m_saturation_targets: [f32;3],
     m_lightness_targets: [f32;3],
@@ -55,13 +61,13 @@ impl Target {
     const WEIGHT_LUMA: f32 = 0.52;
     const WEIGHT_POPULATION: f32 = 0.24;
 
-    pub const INDEX_MIN: usize = 0;
-    pub const INDEX_TARGET: usize = 1;
-    pub const INDEX_MAX: usize = 2;
+    pub(crate) const INDEX_MIN: usize = 0;
+    pub(crate) const INDEX_TARGET: usize = 1;
+    pub(crate) const INDEX_MAX: usize = 2;
 
-    pub const INDEX_WEIGHT_SAT: usize = 0;
-    pub const INDEX_WEIGHT_LUMA: usize = 1;
-    pub const INDEX_WEIGHT_POP: usize = 2;
+    pub(crate) const INDEX_WEIGHT_SAT: usize = 0;
+    pub(crate) const INDEX_WEIGHT_LUMA: usize = 1;
+    pub(crate) const INDEX_WEIGHT_POP: usize = 2;
 
     fn set_target_default_values(&mut self) {
         self.m_lightness_targets[Target::INDEX_MIN] = 0.0;
@@ -79,7 +85,7 @@ impl Target {
         self.m_weights[Target::INDEX_WEIGHT_POP] = Target::WEIGHT_POPULATION;
     }
 
-    pub fn normalize_weights(&mut self) {
+    pub(crate) fn normalize_weights(&mut self) {
         let mut sum = 0f32;
         let mut i = 0;
         let z = self.m_weights.len();
@@ -197,7 +203,7 @@ impl Target {
     /// <p>The larger the weight, relative to the other weights, the more important that a color
     /// being close to the target value has on selection.</p>
     ///
-    /// See also [Target::get_target_saturation()]
+    /// See also [get_target_saturation][Target::get_target_saturation()]
     pub fn get_saturation_weight(&self) -> f32 {
         self.m_weights[Target::INDEX_WEIGHT_SAT]
     }
@@ -208,7 +214,7 @@ impl Target {
     /// <p>The larger the weight, relative to the other weights, the more important that a color
     ///  being close to the target value has on selection.</p>
     ///
-    /// See also [Target::get_target_lightness()]
+    /// See also [get_target_lightness][Target::get_target_lightness]
     pub fn get_lightness_weight(&self) -> f32 {
         self.m_weights[Target::INDEX_WEIGHT_LUMA]
     }
@@ -295,7 +301,7 @@ impl Builder {
     /// <p>A weight of 0 means that it has no weight, and thus has no
     /// bearing on the selection.</p>
     ///
-    ///  See also [Builder::set_target_saturation]
+    ///  See also [set_target_saturation][Builder::set_target_saturation]
     pub fn set_saturation_weight(mut self, weight: f32) -> Builder {
         self.m_target.m_weights[Target::INDEX_WEIGHT_SAT] = weight;
         self
@@ -309,7 +315,7 @@ impl Builder {
     /// <p>A weight of 0 means that it has no weight, and thus has no
     /// bearing on the selection.</p>
     ///
-    /// See also [Builder::set_target_lightness]
+    /// See also [set_target_lightness][Builder::set_target_lightness]
     pub fn set_lightness_weight(mut self, weight: f32) -> Builder {
         self.m_target.m_weights[Target::INDEX_WEIGHT_LUMA] = weight;
         self

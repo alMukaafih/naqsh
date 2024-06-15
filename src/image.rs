@@ -59,6 +59,7 @@ impl Row {
     }
 }
 
+#[derive(Default)]
 pub struct Image {
     pub width: usize,
     pub height: usize,
@@ -89,6 +90,10 @@ impl Image {
         });
         let length = self.rows.len() - 1;
         self.rows.get_mut(length)
+    }
+
+    pub fn as_color_ints(&mut self) -> Vec<i32> {
+        todo!()
     }
 }
 
