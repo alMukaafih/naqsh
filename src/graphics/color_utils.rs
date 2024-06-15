@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 //! A set of color-related utility methods, building upon those available in [Color].
 
-use crate::palette::color::Color;
+use crate::graphics::color::Color;
 
 /// A set of color-related utility methods, building upon those available in [Color].
 pub struct ColorUtils();

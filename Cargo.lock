@@ -186,6 +186,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "naqsh"
+version = "0.2.0"
+dependencies = [
+ "file-format",
+ "jpeg-encoder",
+ "palette",
+ "png",
+ "resize",
+ "serde",
+ "svg",
+ "swash",
+ "toml",
+ "ziyy",
+ "zune-jpeg",
+ "zune-png",
+]
+
+[[package]]
 name = "num-traits"
 version = "0.2.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -305,24 +323,6 @@ name = "rand_core"
 version = "0.6.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ec0be4795e2f6a28069bec0b5ff3e2ac9bafc99e6a9a7dc3547996c5c816922c"
-
-[[package]]
-name = "rasm"
-version = "0.1.0"
-dependencies = [
- "file-format",
- "jpeg-encoder",
- "palette",
- "png",
- "resize",
- "serde",
- "svg",
- "swash",
- "toml",
- "ziyy",
- "zune-jpeg",
- "zune-png",
-]
 
 [[package]]
 name = "rayon"

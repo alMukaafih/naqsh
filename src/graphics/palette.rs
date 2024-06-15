@@ -1,21 +1,9 @@
-#![allow(dead_code)]
-pub mod color;
-pub mod color_cut_quantizer;
-pub mod color_utils;
-pub(self) mod sparse_boolean_array;
-pub mod target;
-
-
 use std::collections::HashMap;
 
-use sparse_boolean_array::SparseBooleanArray;
-use swash::scale::image;
-use target::TargetKind;
-
+use crate::graphics::{Color, ColorUtils, Target, TargetKind};
+use crate::graphics::sparse_boolean_array::SparseBooleanArray;
 use crate::image::Image;
-
-use crate::object::rect::Rect;
-use crate::palette::{color::Color, color_utils::ColorUtils, target::Target};
+use crate::object::Rect;
 
 /// Represents a color swatch generated from an image's palette. The RGB color can be retrieved
 /// by calling [Palette::get_rgb].
@@ -139,14 +127,12 @@ impl Swatch {
 /// are valid within a resulting [Palette].
 pub trait Filter {
     /// Hook to allow clients to be able filter colors from resulting palette.
-    ///
-    /// @param rgb the color in RGB888.
-    ///
-    /// @param hsl HSL representation of the color.
+    /// `rgb` is the color in RGB888.
+    /// `hsl` is HSL representation of the color.
     ///
     /// Returns true if the color is allowed, false if not.
     ///
-    /// See also [Builder::add_filter]
+    /// See also [PaletteBuilder::add_filter]
     fn is_allowed(&self, rgb: i32, hsl: [f32;3]) -> bool;
 }
 
@@ -190,11 +176,11 @@ impl Filter for DefaultFilter {
 /// These can be retrieved from the appropriate getter method.
 ///
 ///
-/// Instances are created with a [Builder] which supports several options to tweak the
+/// Instances are created with a [PaletteBuilder] which supports several options to tweak the
 /// generated Palette. See that class' documentation for more information.
 ///
 /// Generation should always be completed on a background thread, ideally the one in
-/// which you load your image on. [Builder] supports both synchronous and asynchronous
+/// which you load your image on. [PaletteBuilder] supports both synchronous and asynchronous
 /// generation:
 ///
 /// <pre>
@@ -266,8 +252,8 @@ impl From<Vec<Swatch>> for Palette {
     }
 }
 
-/// Builder class for generating [Palette] instances.
-pub struct Builder {
+/// PaletteBuilder class for generating [Palette] instances.
+pub struct PaletteBuilder {
     m_swatches: Vec<Swatch>,
     m_image: Image,
     m_targets: Vec<Target>,
@@ -278,7 +264,7 @@ pub struct Builder {
     m_region: Rect
 }
 
-impl Builder {
+impl PaletteBuilder {
     const DEFAULT_RESIZE_IMAGE_AREA: i32 = 112 * 112;
     const DEFAULT_CALCULATE_NUMBER_COLORS: i32 = 16;
 
@@ -299,7 +285,7 @@ impl Builder {
     }
 }
 
-impl Default for Builder {
+impl Default for PaletteBuilder {
     fn default() -> Self {
         Self {
             m_swatches: Default::default(),
@@ -314,8 +300,8 @@ impl Default for Builder {
     }
 }
 
-impl From<Image> for Builder {
-    /// Start generating a [Palette] with the returned [Builder] instance.
+impl From<Image> for PaletteBuilder {
+    /// Start generating a [Palette] with the returned [PaletteBuilder] instance.
     fn from(image: Image) -> Self {
         todo!()
     }

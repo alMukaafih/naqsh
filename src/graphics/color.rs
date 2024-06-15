@@ -1,4 +1,12 @@
-use std::{fmt, num::Wrapping, ops::{Add, AddAssign, BitAnd, BitAndAssign, BitOr, BitOrAssign, Mul, MulAssign, Shl, Sub, SubAssign}};
+use std::fmt;
+use std::ops::{Add, AddAssign};
+use std::ops::{BitAnd, BitAndAssign};
+use std::ops::{BitOr, BitOrAssign};
+use std::ops::{Div, DivAssign};
+use std::ops::{Mul, MulAssign};
+use std::ops::{Shl, ShlAssign};
+use std::ops::{Sub, SubAssign};
+use std::num::Wrapping;
 
 ///<p>The <code>Color</code> struct provides methods for creating, converting and manipulating colors.
 /// Colors have three different representations:</p>
@@ -305,7 +313,7 @@ impl Color {
 
 #[derive(PartialEq, Eq, PartialOrd, Ord, Clone, Copy, Default, Hash)]
 #[repr(transparent)]
-pub struct ColorInt(i32);
+pub struct ColorInt(pub i32);
 
 impl fmt::Debug for ColorInt {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -400,6 +408,26 @@ impl MulAssign for ColorInt {
 impl MulAssign<i32> for ColorInt {
     fn mul_assign(&mut self, rhs: i32) {
         *self = *self * ColorInt(rhs);
+    }
+}
+
+impl Div for ColorInt {
+    type Output = Self;
+
+    fn div(self, rhs: Self) -> Self::Output {
+        ColorInt(self.0.wrapping_div(rhs.0))
+    }
+}
+
+impl DivAssign for ColorInt {
+    fn div_assign(&mut self, rhs: Self) {
+        *self = *self / rhs;
+    }
+}
+
+impl DivAssign<i32> for ColorInt {
+    fn div_assign(&mut self, rhs: i32) {
+        *self = *self / ColorInt(rhs);
     }
 }
 

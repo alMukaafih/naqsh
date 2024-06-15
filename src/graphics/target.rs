@@ -15,9 +15,9 @@ pub enum TargetKind {
 }
 
 /// A struct which allows custom selection of colors in a [Palette](super::Palette)'s generation. Instances
-/// can be created via the [Builder] class.
+/// can be created via the [TargetBuilder] class.
 ///
-/// To use the target, use the [add_target](super::Builder::add_target) API when building a
+/// To use the target, use the [add_target](super::PaletteBuilder::add_target) API when building a
 /// Palette.
 pub struct Target {
     m_saturation_targets: [f32;3],
@@ -238,57 +238,57 @@ impl Target {
 
 }
 
-/// Builder struct for generating custom [Target] instances.
-pub struct Builder {
+/// TargetBuilder struct for generating custom [Target] instances.
+pub struct TargetBuilder {
     m_target: Target
 }
 
-impl Default for Builder {
+impl Default for TargetBuilder {
     /// Create a new [Target] builder from scratch.
     fn default() -> Self {
         Self { m_target: Target::default() }
     }
 }
 
-impl Builder {
+impl TargetBuilder {
     /// Create a new builder based on an existing [Target].
-    pub fn new(kind: TargetKind) -> Builder {
+    pub fn new(kind: TargetKind) -> TargetBuilder {
         let target = Target::new(kind);
-        Builder { m_target: target }
+        TargetBuilder { m_target: target }
     }
 
     /// Set the minimum saturation value for this target.
-    pub fn set_minimum_saturation(mut self, value: f32) -> Builder {
+    pub fn set_minimum_saturation(mut self, value: f32) -> TargetBuilder {
         self.m_target.m_saturation_targets[Target::INDEX_MIN] = value;
         self
     }
 
     /// Set the target/ideal saturation value for this target.
-    pub fn set_target_saturation(mut self, value: f32) -> Builder {
+    pub fn set_target_saturation(mut self, value: f32) -> TargetBuilder {
         self.m_target.m_saturation_targets[Target::INDEX_TARGET] = value;
         self
     }
 
     /// Set the maximum saturation value for this target.
-    pub fn set_maximum_saturation(mut self, value: f32) -> Builder {
+    pub fn set_maximum_saturation(mut self, value: f32) -> TargetBuilder {
         self.m_target.m_saturation_targets[Target::INDEX_MAX] = value;
         self
     }
 
     /// Set the minimum lightness value for this target.
-    pub fn set_minimum_lightness(mut self, value: f32) -> Builder {
+    pub fn set_minimum_lightness(mut self, value: f32) -> TargetBuilder {
         self.m_target.m_lightness_targets[Target::INDEX_MIN] = value;
         self
     }
 
     /// Set the target/ideal lightness value for this target.
-    pub fn set_target_lightness(mut self, value: f32) -> Builder {
+    pub fn set_target_lightness(mut self, value: f32) -> TargetBuilder {
         self.m_target.m_lightness_targets[Target::INDEX_TARGET] = value;
         self
     }
 
     /// Set the maximum lightness value for this target.
-    pub fn set_maximum_lightness(mut self, value: f32) -> Builder {
+    pub fn set_maximum_lightness(mut self, value: f32) -> TargetBuilder {
         self.m_target.m_lightness_targets[Target::INDEX_MAX] = value;
         self
     }
@@ -301,8 +301,8 @@ impl Builder {
     /// <p>A weight of 0 means that it has no weight, and thus has no
     /// bearing on the selection.</p>
     ///
-    ///  See also [set_target_saturation][Builder::set_target_saturation]
-    pub fn set_saturation_weight(mut self, weight: f32) -> Builder {
+    ///  See also [set_target_saturation][TargetBuilder::set_target_saturation]
+    pub fn set_saturation_weight(mut self, weight: f32) -> TargetBuilder {
         self.m_target.m_weights[Target::INDEX_WEIGHT_SAT] = weight;
         self
     }
@@ -315,8 +315,8 @@ impl Builder {
     /// <p>A weight of 0 means that it has no weight, and thus has no
     /// bearing on the selection.</p>
     ///
-    /// See also [set_target_lightness][Builder::set_target_lightness]
-    pub fn set_lightness_weight(mut self, weight: f32) -> Builder {
+    /// See also [set_target_lightness][TargetBuilder::set_target_lightness]
+    pub fn set_lightness_weight(mut self, weight: f32) -> TargetBuilder {
         self.m_target.m_weights[Target::INDEX_WEIGHT_LUMA] = weight;
         self
     }
@@ -329,7 +329,7 @@ impl Builder {
     ///
     /// <p>A weight of 0 means that it has no weight, and thus has no
     /// bearing on the selection.</p>
-    pub fn set_population_weight(mut self, weight: f32) -> Builder {
+    pub fn set_population_weight(mut self, weight: f32) -> TargetBuilder {
         self.m_target.m_weights[Target::INDEX_WEIGHT_POP] = weight;
         self
     }
@@ -339,7 +339,7 @@ impl Builder {
     ///
     /// @param exclusive true if any the color is exclusive to this target, or false if the
     /// color can be selected for other targets.
-    pub fn set_exclusive(mut self, exclusive: bool) -> Builder {
+    pub fn set_exclusive(mut self, exclusive: bool) -> TargetBuilder {
         self.m_target.m_is_exclusive = exclusive;
         self
     }

@@ -1,1 +1,3 @@
-pub mod rect;
+mod rect;
+
+pub use rect::Rect;
