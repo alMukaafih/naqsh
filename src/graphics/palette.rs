@@ -1,9 +1,11 @@
 use std::collections::HashMap;
 
 use crate::graphics::{Color, ColorUtils, Target, TargetKind};
-use crate::graphics::sparse_boolean_array::SparseBooleanArray;
+use crate::util::SparseBooleanArray;
 use crate::image::Image;
 use crate::object::Rect;
+
+use super::ColorInt;
 
 /// Represents a color swatch generated from an image's palette. The RGB color can be retrieved
 /// by calling [Palette::get_rgb].
@@ -12,11 +14,11 @@ pub struct Swatch {
     m_red: u8,
     m_green: u8,
     m_blue: u8,
-    m_rgb: i32,
+    m_rgb: ColorInt,
     m_population: i32,
     m_generated_text_colors: bool,
-    m_title_text_color: i32,
-    m_body_text_color: i32,
+    m_title_text_color: ColorInt,
+    m_body_text_color: ColorInt,
     m_hsl: [f32;3]
 }
 
@@ -24,7 +26,7 @@ impl Swatch {
     const MIN_CONTRAST_TITLE_TEXT: f32 = 3.0;
     const MIN_CONTRAST_BODY_TEXT: f32 = 4.5;
 
-    pub fn new(color: i32, population: i32) -> Swatch {
+    pub fn new(color: ColorInt, population: i32) -> Swatch {
         Swatch {
             m_red: Color::red(color),
             m_green: Color::green(color),
@@ -36,7 +38,7 @@ impl Swatch {
     }
 
     /// Returns this swatch's RGB color value
-    pub fn get_rgb(&self) -> i32 {
+    pub fn get_rgb(&self) -> ColorInt {
         self.m_rgb
     }
 
@@ -110,14 +112,14 @@ impl Swatch {
 
     /// Returns an appropriate color to use for any 'title' text which is displayed over this
     /// [Swatch]'s color. This color is guaranteed to have sufficient contrast.
-    pub fn get_title_text_color(&mut self) -> i32 {
+    pub fn get_title_text_color(&mut self) -> ColorInt {
         self.ensure_text_colors_generated();
         self.m_title_text_color
     }
 
     /// Returns an appropriate color to use for any 'body' text which is displayed over this
     /// [Swatch]'s color. This color is guaranteed to have sufficient contrast.
-    pub fn get_body_text_color(&mut self) -> i32 {
+    pub fn get_body_text_color(&mut self) -> ColorInt {
         self.ensure_text_colors_generated();
         self.m_body_text_color
     }

@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 /// SparseBooleanArrays map integers to booleans.
 /// Unlike a normal array of booleans
 /// there can be gaps in the indices.  It is intended to be more memory efficient

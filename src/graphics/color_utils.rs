@@ -3,6 +3,8 @@
 
 use crate::graphics::color::Color;
 
+use super::ColorInt;
+
 /// A set of color-related utility methods, building upon those available in [Color].
 pub struct ColorUtils();
 
@@ -73,7 +75,7 @@ impl ColorUtils {
     ///
     /// `color` is the ARGB color to convert. The alpha component is ignored.
     /// `out_hsl` is a 3-element array which holds the resulting HSL components
-    pub fn color_to_hsl(color: i32, out_hsl: &mut [f32;3]) {
+    pub fn color_to_hsl(color: ColorInt, out_hsl: &mut [f32;3]) {
         Self::rgb_to_hsl(Color::red(color), Color::green(color), Color::blue(color), out_hsl)
     }
 
@@ -134,12 +136,12 @@ impl ColorUtils {
     /// </ul>
     /// color the ARGB color to convert. The alpha component is ignored
     /// out_xyz 3-element array which holds the resulting LAB components
-    pub fn color_to_xyz(color: i32, out_xyz: &mut [f64;3]) {
+    pub fn color_to_xyz(color: ColorInt, out_xyz: &mut [f64;3]) {
         Self::rgb_to_xyz(Color::red(color), Color::green(color), Color::blue(color), out_xyz)
     }
 
     /// Set the alpha component of color to be alpha.
-    pub fn set_alpha_component(color: i32, alpha: u8) -> i32 {
+    pub fn set_alpha_component(color: ColorInt, alpha: u8) -> ColorInt {
         (color & 0x00ffffff) | ((alpha as i32) << 24)
     }
 
@@ -161,7 +163,7 @@ impl ColorUtils {
         (((0xFF * fg_c * fg_a) + (bg_c * bg_a * (0xFF - fg_a))) / (a * 0xFF)) as u8
     }
 
-    pub fn composite_colors(foreground: i32, background: i32) -> i32 {
+    pub fn composite_colors(foreground: ColorInt, background: ColorInt) -> i32 {
         let bg_alpha = Color::alpha(background);
         let fg_alpha = Color::alpha(foreground);
         let a = Self::composite_alpha(fg_alpha, bg_alpha);
@@ -173,13 +175,13 @@ impl ColorUtils {
         let b = Self::composite_component(Color::blue(foreground), fg_alpha,
                 Color::blue(background), bg_alpha, a);
 
-        return Color::argb(a, r, g, b)
+        return *Color::argb(a, r, g, b)
     }
 
     /// Returns the luminance of a color as a float between `0.0` and `1.0`.
     ///
     /// Defined as the Y component in the XYZ representation of `color`.
-    pub fn calculate_luminance(color: i32) -> f64 {
+    pub fn calculate_luminance(color: ColorInt) -> f64 {
         let mut result: [f64;3] = Default::default();
         Self::color_to_xyz(color, &mut result);
         result[1] / 100f64
@@ -190,13 +192,13 @@ impl ColorUtils {
     ///
     /// Formula defined
     /// <a href="http://www.w3.org/TR/2008/REC-WCAG20-20081211/#contrast-ratiodef">here</a>.
-    pub fn calculate_contrast(mut foreground: i32, background: i32) -> f64 {
+    pub fn calculate_contrast(mut foreground: ColorInt, background: ColorInt) -> f64 {
         if Color::alpha(background) != 255 {
             panic!()
         }
         if Color::alpha(foreground) < 255 {
             // If the foreground is translucent, composite the foreground over the background
-            foreground = Self::composite_colors(foreground, background);
+            foreground = Self::composite_colors(foreground, background).into();
         }
         let luminance1 = Self::calculate_luminance(foreground) + 0.05;
         let luminance2 = Self::calculate_luminance(background) + 0.05;
@@ -213,7 +215,7 @@ impl ColorUtils {
     /// minContrastRatio the minimum contrast ratio
     ///
     /// Returns the alpha value in the range \[0, 255] or -1 if no value could be calculated
-    pub fn calculate_minimum_alpha(foreground: i32, background: i32, min_contrast_ratio: f32) -> i32 {
+    pub fn calculate_minimum_alpha(foreground: ColorInt, background: ColorInt, min_contrast_ratio: f32) -> i32 {
         if Color::alpha(background) != 255 {
             panic!()
         }

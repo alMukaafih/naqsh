@@ -1,9 +1,10 @@
 #![allow(dead_code)]
 
 use std::mem::ManuallyDrop;
-use std::ops::{AddAssign, Index, IndexMut};
+use std::ops::{AddAssign, Deref, DerefMut, Index, IndexMut};
 
 /// A Pixel in an Image.
+#[repr(transparent)]
 pub struct Pixel {
     buf: ManuallyDrop<Vec<u8>>
 }
@@ -59,6 +60,14 @@ impl Row {
     }
 }
 
+impl Deref for Row {
+    type Target = ManuallyDrop<Vec<u8>>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.buf
+    }
+}
+
 #[derive(Default)]
 pub struct Image {
     pub width: usize,
@@ -102,6 +111,30 @@ impl From<(usize, usize, Vec<u8>)> for Image {
         Image {
             width: data.0, height: data.1, format: String::new(), rows: vec![], buf: data.2
         }
+    }
+}
+
+impl IntoIterator for Image {
+    type Item = u8;
+
+    type IntoIter = std::vec::IntoIter<Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.buf.into_iter()
+    }
+}
+
+impl Deref for Image {
+    type Target = Vec<u8>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.buf
+    }
+}
+
+impl DerefMut for Image {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.buf
     }
 }
 

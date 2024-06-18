@@ -1,30 +1,22 @@
-use std::fmt;
-use std::ops::{Add, AddAssign};
-use std::ops::{BitAnd, BitAndAssign};
-use std::ops::{BitOr, BitOrAssign};
-use std::ops::{Div, DivAssign};
-use std::ops::{Mul, MulAssign};
-use std::ops::{Shl, ShlAssign};
-use std::ops::{Sub, SubAssign};
-use std::num::Wrapping;
+use super::ColorInt;
 
 ///<p>The <code>Color</code> struct provides methods for creating, converting and manipulating colors.
 /// Colors have three different representations:</p>
 /// <ul>
-///     <li>Color ints, the most common representation</li>
+///     <li>[ColorInt]s, the most common representation</li>
 ///     <li>Color longs</li>
 ///     <li><code>Color</code> instances</li>
 /// </ul>
 /// <p>The section below describe each representation in detail.</p>
 ///
-/// <h3>Color ints</h3>
-/// <p>Color ints are the most common representation of colors on Android and
+/// <h3>[ColorInt]s</h3>
+/// <p>[ColorInt]s are the most common representation of colors on Android and
 /// have been used since {@link android.os.Build.VERSION_CODES#BASE API level 1}.</p>
 ///
-/// <p>A color int always defines a color in the {@link ColorSpace.Named#SRGB sRGB}
+/// <p>A [ColorInt] always defines a color in the {@link ColorSpace.Named#SRGB sRGB}
 /// color space using 4 components packed in a single 32 bit integer value:</p>
 ///
-/// <table summary="Color int definition">
+/// <table summary="[ColorInt] definition">
 ///     <tr>
 ///         <th>Component</th><th>Name</th><th>Size</th><th>Range</th>
 ///     </tr>
@@ -35,39 +27,39 @@ use std::num::Wrapping;
 /// </table>
 ///
 /// <p>The components in this table are listed in encoding order (see below),
-/// which is why color ints are called ARGB colors.</p>
+/// which is why [ColorInt]s are called ARGB colors.</p>
 ///
 /// <h4>Usage in code</h4>
-/// <p>To avoid confusing color ints with arbitrary integer values, it is a
-/// good practice to annotate them with the <code>@Wrapping</code> annotation
+/// <p>To avoid confusing [ColorInt]s with arbitrary integer values, it is a
+/// good practice to annotate them with the <code>@ColorInt</code> annotation
 /// found in the Android Support Library.</p>
 ///
 /// <h4>Encoding</h4>
-/// <p>The four components of a color int are encoded in the following way:</p>
+/// <p>The four components of a [ColorInt] are encoded in the following way:</p>
 /// <pre struct="prettyprint">
 /// int color = (A & 0xff) << 24 | (R & 0xff) << 16 | (G & 0xff) << 8 | (B & 0xff);
 /// </pre>
 ///
-/// <p>Because of this encoding, color ints can easily be described as an integer
+/// <p>Because of this encoding, [ColorInt]s can easily be described as an integer
 /// constant in source. For instance, opaque blue is <code>0xff0000ff</code>
 /// and yellow is <code>0xffffff00</code>.</p>
 ///
-/// <p>To easily encode color ints, it is recommended to use the static methods
+/// <p>To easily encode [ColorInt]s, it is recommended to use the static methods
 /// {@link #argb(int, int, int, int)} and {@link #rgb(int, int, int)}. The second
 /// method omits the alpha component and assumes the color is opaque (alpha is 255).
-/// As a convenience this struct also offers methods to encode color ints from components
+/// As a convenience this struct also offers methods to encode [ColorInt]s from components
 /// defined in the \([0..1]\) range: {@link #argb(float, float, float, float)} and
 /// {@link #rgb(float, float, float)}.</p>
 ///
-/// <p>Color longs (defined below) can be easily converted to color ints by invoking
+/// <p>Color longs (defined below) can be easily converted to [ColorInt]s by invoking
 /// the {@link #toArgb(long)} method. This method performs a color space conversion
 /// if needed.</p>
 ///
-/// <p>It is also possible to create a color int by invoking the method {@link #toArgb()}
+/// <p>It is also possible to create a [ColorInt] by invoking the method {@link #toArgb()}
 /// on a color instance.</p>
 ///
 /// <h4>Decoding</h4>
-/// <p>The four ARGB components can be individually extracted from a color int
+/// <p>The four ARGB components can be individually extracted from a [ColorInt]
 /// using the following expressions:</p>
 /// <pre struct="prettyprint">
 /// int A = (color >> 24) & 0xff; // or color >>> 24
@@ -87,7 +79,7 @@ use std::num::Wrapping;
 /// <h3>Color longs</h3>
 /// <p>Color longs are a representation introduced in
 /// {@link android.os.Build.VERSION_CODES#O Android O} to store colors in different
-/// {@link ColorSpace color spaces}, with more precision than color ints.</p>
+/// {@link ColorSpace color spaces}, with more precision than [ColorInt]s.</p>
 ///
 /// <p>A color long always defines a color using 4 components packed in a single
 /// 64 bit long value. One of these components is always alpha while the other
@@ -166,7 +158,7 @@ use std::num::Wrapping;
 /// color space. To encode sRGB colors, use {@link #pack(float, float, float)}
 /// and {@link #pack(float, float, float, float)} which are the
 /// equivalent of {@link #rgb(int, int, int)} and {@link #argb(int, int, int, int)}
-/// for color ints. If you simply need to convert a color int into a color long,
+/// for [ColorInt]s. If you simply need to convert a [ColorInt] into a color long,
 /// use {@link #pack(int)}.</p>
 ///
 /// <p>It is also possible to create a color long value by invoking the method
@@ -191,7 +183,7 @@ use std::num::Wrapping;
 /// <h3>Color instances</h3>
 /// <p>Color instances are a representation introduced in
 /// {@link android.os.Build.VERSION_CODES#O Android O} to store colors in different
-/// {@link ColorSpace color spaces}, with more precision than both color ints and
+/// {@link ColorSpace color spaces}, with more precision than both [ColorInt]s and
 /// color longs. Color instances also offer the ability to store more than 4
 /// components if necessary.</p>
 ///
@@ -199,7 +191,7 @@ use std::num::Wrapping;
 /// <code>valueOf</code> methods. For instance:</p>
 /// <pre struct="prettyprint">
 /// // sRGB
-/// Color opaqueRed = Color.valueOf(0xffff0000); // from a color int
+/// Color opaqueRed = Color.valueOf(0xffff0000); // from a [ColorInt]
 /// Color translucentRed = Color.valueOf(1.0f, 0.0f, 0.0f, 0.5f);
 ///
 /// // Wide gamut color
@@ -211,7 +203,7 @@ use std::num::Wrapping;
 /// Color green = Color.valueOf(100.0f, -128.0f, 128.0f, 1.0f, lab);
 /// </pre>
 ///
-/// <p>Color instances can be converted to color ints ({@link #toArgb()}) or
+/// <p>Color instances can be converted to [ColorInt]s ({@link #toArgb()}) or
 /// color longs ({@link #pack()}). They also offer easy access to their various
 /// components using the following methods:</p>
 /// <ul>
@@ -238,7 +230,7 @@ use std::num::Wrapping;
 ///     convert a color from a source color space to a destination color space</li>
 ///     <li>{@link #convert(long, ColorSpace)} to convert a color long from its
 ///     built-in color space to a destination color space</li>
-///     <li>{@link #convert(int, ColorSpace)} to convert a color int from sRGB
+///     <li>{@link #convert(int, ColorSpace)} to convert a [ColorInt] from sRGB
 ///     to a destination color space</li>
 /// </ul>
 ///
@@ -254,220 +246,76 @@ use std::num::Wrapping;
 /// <p>The color representations described above do not use pre-multiplied
 /// color components (a pre-multiplied color component is a color component
 /// that has been multiplied by the value of the alpha component).
-/// For instance, the color int representation of opaque red is
+/// For instance, the [ColorInt] representation of opaque red is
 /// <code>0xffff0000</code>. For semi-transparent (50%) red, the
 /// representation becomes <code>0x80ff0000</code>. The equivalent color
 /// instance representations would be <code>(1.0, 0.0, 0.0, 1.0)</code>
 /// and <code>(1.0, 0.0, 0.0, 0.5)</code>.</p>
-pub struct Color();
+pub struct Color;
 
 impl Color {
-    pub const BLACK: i32       = 0xFF000000u32 as i32;
-    pub const WHITE: i32       = 0xFFFFFFFFu32 as i32;
+    pub const BLACK: ColorInt       = ColorInt(0xFF000000u32 as i32);
+    pub const DKGRAY: ColorInt      = ColorInt(0xFF444444u32 as i32);
+    pub const GRAY: ColorInt        = ColorInt(0xFF888888u32 as i32);
+    pub const LTGRAY: ColorInt      = ColorInt(0xFFCCCCCCu32 as i32);
+    pub const WHITE: ColorInt       = ColorInt(0xFFFFFFFFu32 as i32);
+    pub const RED: ColorInt         = ColorInt(0xFFFF0000u32 as i32);
+    pub const GREEN: ColorInt       = ColorInt(0xFF00FF00u32 as i32);
+    pub const BLUE: ColorInt        = ColorInt(0xFFFFFF00u32 as i32);
+    pub const YELLOW: ColorInt      = ColorInt(0xFF0000FFu32 as i32);
+    pub const CYAN: ColorInt        = ColorInt(0xFF00FFFFu32 as i32);
+    pub const MAGENTA: ColorInt     = ColorInt(0xFFFF00FFu32 as i32);
+    pub const TRANSPARENT: ColorInt = ColorInt(0);
 
-    /// Return the alpha component of a color int. This is the same as saying
+    /// Return the alpha component of a [ColorInt]. This is the same as saying
     /// `((color >> 24) & 0xff) as u8`
-    pub fn alpha(color: i32) -> u8 {
-        ((color >> 24) & 0xff) as u8
+    pub fn alpha(color: ColorInt) -> u8 {
+        color.alpha()
     }
 
-    /// Return the red component of a color int. This is the same as saying
+    /// Return the red component of a [ColorInt]. This is the same as saying
     /// `((color >> 16) & 0xFF) as u8`
-    pub fn red(color: i32) -> u8 {
-        ((color >> 16) & 0xFF) as u8
+    pub fn red(color: ColorInt) -> u8 {
+        color.red()
     }
 
-    /// Return the green component of a color int. This is the same as saying
+    /// Return the green component of a [ColorInt]. This is the same as saying
     /// `((color >> 8) & 0xFF) as u8`
-    pub fn green(color: i32) -> u8 {
-        ((color >> 8) & 0xFF) as u8
+    pub fn green(color: ColorInt) -> u8 {
+        color.green()
     }
 
-    /// Return the blue component of a color int. This is the same as saying
-    /// `(color >> 8 & 0xFF) as u8`
-    pub fn blue(color: i32) -> u8 {
-        (color >> 8 & 0xFF) as u8
+    /// Return the blue component of a [ColorInt]. This is the same as saying
+    /// `(color & 0xFF) as u8`
+    pub fn blue(color: ColorInt) -> u8 {
+        color.blue()
     }
 
-    /// Returns a color-int from red, green, blue components.
+    /// Returns a [ColorInt] from red, green, blue components.
     /// The alpha component is implicitly 255 (fully opaque).
     /// `red` is the red component  of the color.
     /// `green` is the green component  of the color.
     /// `blue` is the blue component  of the color.
-    pub fn rgb(red: u8, green: u8, blue: u8) -> i32 {
-        let red = Wrapping(red as i32);
-        let green = Wrapping(green as i32);
-        let blue = Wrapping(blue as i32);
-        (Wrapping(0xff000000u32 as i32) | (red << 16) | (green << 8) | blue).0
+    pub fn rgb(red: u8, green: u8, blue: u8) -> ColorInt {
+        ColorInt(0xff000000u32 as i32)
+            | (ColorInt(red as i32) << 16)
+            | (ColorInt(green as i32) << 8)
+            | ColorInt(blue as i32)
     }
 
-    /// Returns a color-int from alpha, red, green, blue components.
+    /// Returns a [ColorInt] from alpha, red, green, blue components.
     /// `alpha` is the alpha component  of the color.
     /// `red` is the red component  of the color.
     /// `green` is the green component  of the color.
     /// `blue` is the blue component  of the color.
-    pub fn argb(alpha: u8, red: u8, green: u8, blue: u8) -> i32 {
-        ((alpha as i32) << 24) | ((red as i32) << 16) | ((green as i32) << 8) | (blue as i32)
+    pub fn argb(alpha: u8, red: u8, green: u8, blue: u8) -> ColorInt {
+        (ColorInt(alpha as i32) << 24)
+            | (ColorInt(red as i32) << 16)
+            | (ColorInt(green as i32) << 8)
+            | ColorInt(blue as i32)
     }
-}
 
-#[derive(PartialEq, Eq, PartialOrd, Ord, Clone, Copy, Default, Hash)]
-#[repr(transparent)]
-pub struct ColorInt(pub i32);
-
-impl fmt::Debug for ColorInt {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        self.0.fmt(f)
-    }
-}
-
-impl fmt::Display for ColorInt {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        self.0.fmt(f)
-    }
-}
-
-impl fmt::Binary for ColorInt {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        self.0.fmt(f)
-    }
-}
-
-impl fmt::Octal for ColorInt {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        self.0.fmt(f)
-    }
-}
-
-impl fmt::LowerHex for ColorInt {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        self.0.fmt(f)
-    }
-}
-
-impl fmt::UpperHex for ColorInt {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        self.0.fmt(f)
-    }
-}
-
-impl Add for ColorInt {
-    type Output = Self;
-
-    fn add(self, rhs: Self) -> Self::Output {
-        ColorInt(self.0.wrapping_add(rhs.0))
-    }
-}
-
-impl AddAssign for ColorInt {
-    fn add_assign(&mut self, rhs: Self) {
-        *self = *self + rhs;
-    }
-}
-
-impl AddAssign<i32> for ColorInt {
-    fn add_assign(&mut self, rhs: i32) {
-        *self = *self + ColorInt(rhs);
-    }
-}
-
-impl Sub for ColorInt {
-    type Output = Self;
-
-    fn sub(self, rhs: Self) -> Self::Output {
-        ColorInt(self.0.wrapping_sub(rhs.0))
-    }
-}
-
-impl SubAssign for ColorInt {
-    fn sub_assign(&mut self, rhs: Self) {
-        *self = *self - rhs;
-    }
-}
-
-impl SubAssign<i32> for ColorInt {
-    fn sub_assign(&mut self, rhs: i32) {
-        *self = *self - ColorInt(rhs);
-    }
-}
-
-impl Mul for ColorInt {
-    type Output = Self;
-
-    fn mul(self, rhs: Self) -> Self::Output {
-        ColorInt(self.0.wrapping_mul(rhs.0))
-    }
-}
-
-impl MulAssign for ColorInt {
-    fn mul_assign(&mut self, rhs: Self) {
-        *self = *self * rhs;
-    }
-}
-
-impl MulAssign<i32> for ColorInt {
-    fn mul_assign(&mut self, rhs: i32) {
-        *self = *self * ColorInt(rhs);
-    }
-}
-
-impl Div for ColorInt {
-    type Output = Self;
-
-    fn div(self, rhs: Self) -> Self::Output {
-        ColorInt(self.0.wrapping_div(rhs.0))
-    }
-}
-
-impl DivAssign for ColorInt {
-    fn div_assign(&mut self, rhs: Self) {
-        *self = *self / rhs;
-    }
-}
-
-impl DivAssign<i32> for ColorInt {
-    fn div_assign(&mut self, rhs: i32) {
-        *self = *self / ColorInt(rhs);
-    }
-}
-
-impl BitOr for ColorInt {
-    type Output = Self;
-
-    fn bitor(self, rhs: Self) -> Self::Output {
-        let num = Wrapping(self.0) | Wrapping(rhs.0);
-        Self(num.0)
-    }
-}
-
-impl BitOrAssign for ColorInt {
-    fn bitor_assign(&mut self, rhs: Self) {
-        let num = Wrapping(self.0) | Wrapping(rhs.0);
-        *self = Self(num.0);
-    }
-}
-
-impl BitAnd for ColorInt {
-    type Output = Self;
-
-    fn bitand(self, rhs: Self) -> Self::Output {
-        let num = Wrapping(self.0) & Wrapping(rhs.0);
-        Self(num.0)
-    }
-}
-
-impl BitAndAssign for ColorInt {
-    fn bitand_assign(&mut self, rhs: Self) {
-        let num = Wrapping(self.0) & Wrapping(rhs.0);
-        *self = Self(num.0);
-    }
-}
-
-impl Shl<usize> for ColorInt {
-    type Output = Self;
-
-    fn shl(self, rhs: usize) -> Self::Output {
-        let num = Wrapping(self.0) << rhs;
-        Self(num.0)
+    pub fn parse_color(color_string: String) -> ColorInt {
+        todo!()
     }
 }

@@ -201,7 +201,7 @@ impl Vbox {
         let green_mean = f32::round(green_sum as f32 / total_population as f32) as i32;
         let blue_mean = f32::round(blue_sum as f32 / total_population as f32) as i32;
 
-        Swatch::new(ColorCutQuantizer::approximate_to_rgb888_1(red_mean, green_mean, blue_mean), total_population)
+        Swatch::new(ColorCutQuantizer::approximate_to_rgb888_1(red_mean, green_mean, blue_mean).into(), total_population)
     }
 }
 
@@ -315,7 +315,7 @@ impl ColorCutQuantizer {
             // The image has fewer colors than the maximum requested, so just return the colors
             for color in colors {
                 ccq.m_quantized_colors.push(
-                    Swatch::new(Self::approximate_to_rgb888_2(color as i32), hist[color])
+                    Swatch::new(Self::approximate_to_rgb888_2(color as i32).into(), hist[color])
                 )
             }
         } else {
@@ -419,12 +419,12 @@ impl ColorCutQuantizer {
 
     fn should_ignore_color_1(&mut self, color565: i32) -> bool {
         let rgb = Self::approximate_to_rgb888_2(color565);
-        ColorUtils::color_to_hsl(rgb, &mut self.m_temp_hsl);
+        ColorUtils::color_to_hsl(rgb.into(), &mut self.m_temp_hsl);
         self.should_ignore_color_3(rgb, self.m_temp_hsl)
     }
 
     fn should_ignore_color_2(&self, color: &mut Swatch) -> bool {
-        self.should_ignore_color_3(color.get_rgb(), color.get_hsl())
+        self.should_ignore_color_3(*color.get_rgb(), color.get_hsl())
     }
 
     fn should_ignore_color_3(&self, rgb: i32, hsl: [f32;3]) -> bool {
@@ -442,15 +442,15 @@ impl ColorCutQuantizer {
     }
 
     fn quantize_from_rgb888(color: i32) -> i32 {
-        let r = Self::modify_word_width(Color::red(color).into(), 8, Self::QUANTIZE_WORD_WIDTH);
-        let g = Self::modify_word_width(Color::green(color).into(), 8, Self::QUANTIZE_WORD_WIDTH);
-        let b = Self::modify_word_width(Color::blue(color).into(), 8, Self::QUANTIZE_WORD_WIDTH);
+        let r = Self::modify_word_width(Color::red(color.into()).into(), 8, Self::QUANTIZE_WORD_WIDTH);
+        let g = Self::modify_word_width(Color::green(color.into()).into(), 8, Self::QUANTIZE_WORD_WIDTH);
+        let b = Self::modify_word_width(Color::blue(color.into()).into(), 8, Self::QUANTIZE_WORD_WIDTH);
         (r as i32) << (Self::QUANTIZE_WORD_WIDTH + Self::QUANTIZE_WORD_WIDTH) | (g as i32) << Self::QUANTIZE_WORD_WIDTH | (b as i32)
     }
 
     /// Quantized RGB888 values to have a word width of [Self::QUANTIZE_WORD_WIDTH].
     fn approximate_to_rgb888_1(r: i32, g: i32, b: i32) -> i32 {
-        Color::rgb(
+        *Color::rgb(
             Self::modify_word_width(r, Self::QUANTIZE_WORD_WIDTH, 8) as u8,
             Self::modify_word_width(g, Self::QUANTIZE_WORD_WIDTH, 8) as u8,
             Self::modify_word_width(b, Self::QUANTIZE_WORD_WIDTH, 8) as u8
