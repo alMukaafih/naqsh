@@ -7,6 +7,9 @@ name: Naqsh Python CI
 
 on:
   push:
+    paths:
+      - naqsh-py
+      - .github/workflows/naqsh-py-ci.yml
     branches:
       - main
       - master
@@ -146,7 +149,7 @@ jobs:
         uses: PyO3/maturin-action@v1
         with:
           command: sdist
-          args: --out dist
+          args: -m naqsh-py/Cargo.toml --out dist
       - name: Upload sdist
         uses: actions/upload-artifact@v4
         with:
