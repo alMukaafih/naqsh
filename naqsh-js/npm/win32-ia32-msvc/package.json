@@ -1,0 +1,32 @@
+{
+  "name": "naqsh-win32-ia32-msvc",
+  "version": "0.2.0",
+  "os": [
+    "win32"
+  ],
+  "cpu": [
+    "ia32"
+  ],
+  "main": "naqsh-js.win32-ia32-msvc.node",
+  "files": [
+    "naqsh-js.win32-ia32-msvc.node"
+  ],
+  "description": "Create Image from code.",
+  "keywords": [
+    "napi-rs",
+    "NAPI",
+    "N-API",
+    "Rust",
+    "node-addon",
+    "node-addon-api"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">= 10"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "repository": "git@github.com:napi-rs/package-template.git"
+}

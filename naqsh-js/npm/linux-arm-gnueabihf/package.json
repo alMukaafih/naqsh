@@ -1,0 +1,32 @@
+{
+  "name": "naqsh-linux-arm-gnueabihf",
+  "version": "0.2.0",
+  "os": [
+    "linux"
+  ],
+  "cpu": [
+    "arm"
+  ],
+  "main": "naqsh-js.linux-arm-gnueabihf.node",
+  "files": [
+    "naqsh-js.linux-arm-gnueabihf.node"
+  ],
+  "description": "Create Image from code.",
+  "keywords": [
+    "napi-rs",
+    "NAPI",
+    "N-API",
+    "Rust",
+    "node-addon",
+    "node-addon-api"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">= 10"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "repository": "git@github.com:napi-rs/package-template.git"
+}
