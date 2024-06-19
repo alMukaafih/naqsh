@@ -87,6 +87,7 @@ jobs:
         with:
           node-version: 20
           cache: npm
+          cache-dependency-path: naqsh-js/package-lock.json
       - name: Install
         uses: dtolnay/rust-toolchain@stable
         if: ${{ !matrix.settings.docker }}
@@ -123,6 +124,7 @@ jobs:
         with:
           node-version: 20
           cache: npm
+          cache-dependency-path: naqsh-js/package-lock.json
           architecture: x86
       - name: Build in docker
         uses: addnab/docker-run-action@v3
@@ -215,6 +217,7 @@ jobs:
   #       with:
   #         node-version: ${{ matrix.node }}
   #         cache: npm
+  #        cache-dependency-path: naqsh-js/package-lock.json
   #         architecture: ${{ matrix.settings.architecture }}
   #     - name: Install dependencies
   #       run: npm install
@@ -246,6 +249,7 @@ jobs:
   #       with:
   #         node-version: ${{ matrix.node }}
   #         cache: npm
+  #        cache-dependency-path: naqsh-js/package-lock.json
   #     - name: Install dependencies
   #       run: npm install
   #     - name: Download artifacts
@@ -276,6 +280,7 @@ jobs:
   #       with:
   #         node-version: ${{ matrix.node }}
   #         cache: npm
+  #        cache-dependency-path: naqsh-js/package-lock.json
   #     - name: Install dependencies
   #       run: |
   #         npm config set supportedArchitectures.libc "musl"
@@ -420,6 +425,7 @@ jobs:
   #       with:
   #         node-version: 20
   #         cache: npm
+  #        cache-dependency-path: naqsh-js/package-lock.json
   #     - name: Install dependencies
   #       run: npm install
   #     - name: Download all artifacts
